@@ -202,7 +202,7 @@ export default function UpgradePage() {
         <div className="mb-10 text-center">
           <h1 className="text-3xl md:text-4xl font-bold mb-3" data-testid="heading-upgrade">Access Passes</h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            One pass unlocks all PAIF tools. Every pass has the same access — only the duration changes.
+             One pass unlocks all eligible PAIF website tools. Every pass has the same access — only the duration changes.
           </p>
           <p className="text-xs text-muted-foreground mt-2">Live trading stays separate and carries a 1.6% platform fee on profitable trades only.</p>
           {wallet && status?.active && (
@@ -217,7 +217,7 @@ export default function UpgradePage() {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5">
             <div>
                <h2 className="font-bold">Try the Access Pass experience free for 3 days</h2>
-               <p className="text-sm text-muted-foreground">Connect your wallet to claim the one-time trial. It applies across all PAIF tools.</p>
+                <p className="text-sm text-muted-foreground">Connect your wallet to claim the one-time trial. It applies across the same eligible website tools.</p>
             </div>
               <Button onClick={() => (connected || isEmailAuth) ? startTrial() : setConnectOpen(true)} disabled={!!busyId || !!status?.trialStartedAt || !!status?.paidActive} data-testid="button-start-access-trial">
               {busyId === "trial" ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Starting…</> :
@@ -240,7 +240,7 @@ export default function UpgradePage() {
                 <div className="mb-1 text-3xl font-bold" data-testid={`text-access-pass-price-${pass.id}`}>${pass.priceUsd.toFixed(2)}</div>
                 <div className="text-sm text-muted-foreground mb-4">{pass.durationMs / 86_400_000} {pass.durationMs === 86_400_000 ? "day" : "days"} of full access</div>
                 <ul className="text-xs text-muted-foreground space-y-2 mb-5 flex-1">
-                  {["Paper trading and automated tools", "Saved scans and activity history", "All PAIF tools included", "One-time payment — no subscription"].map((feature) => (
+                  {["Paper trading and autonomous tools", "Saved scans and activity history", "All eligible PAIF website tools", "One-time payment — no subscription"].map((feature) => (
                     <li key={feature} className="flex items-start gap-1.5"><Check className="w-3 h-3 text-emerald-500 mt-0.5 flex-shrink-0" /><span>{feature}</span></li>
                   ))}
                 </ul>
