@@ -6,6 +6,7 @@ import { useScanToken, useTrendingTokens } from '@/lib/research';
 import type { ScanResult } from '@/lib/research';
 import { isFreshQuote, quoteProblem } from '@/lib/paper';
 import { BuyPanel } from '@/components/BuyPanel';
+import { LiveTradePanel } from '@/components/LiveTradePanel';
 import { Body, Btn, Card, Eyebrow, F, fmtPct, fmtPrice, fmtUsd, Header, MoveCandle, Notice, pctColor, shortAddr, Skeleton, useNow } from '@/components/ui';
 
 const RISK_STALE_MS = 5 * 60 * 1000;
@@ -146,6 +147,7 @@ export default function TokenDetail() {
             </Card>
 
             {quote ? <BuyPanel token={quote} /> : <Notice tone="info" title="Practice buy unavailable" body="Practice trades need a fresh quote from the trending feed." />}
+            <LiveTradePanel mint={r.tokenAddress || query} symbol={r.tokenSymbol || 'token'} />
             <Btn label="Rescan" variant="outline" onPress={doScan} testID="button-rescan" busy={scan.isPending} />
             <Body style={{ fontSize: 11 }}>Research is informational and not financial advice.</Body>
           </>

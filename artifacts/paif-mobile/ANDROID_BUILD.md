@@ -5,9 +5,13 @@
 The existing website remains PAIF.fun. This is a separate Android application
 (`fun.paif.android`, version `1.0.0`, version code `1`). It reads PAIF's public
 research endpoints, offers an independent on-device manual paper account, and
-demonstrates Android Mobile Wallet Adapter authorization and message signing.
-It does not trade real funds, send transactions, import private keys, port paid
-bots, or treat a wallet address as backend authentication.
+uses Android Mobile Wallet Adapter for owner signatures and wallet-approved
+Solana transactions. The Research screen supports real Pump.fun bonding-curve
+and Jupiter-routed buys and sells. A separate Bots screen can manage existing
+owner-linked Swing Bots and automated strategies through their signed APIs.
+Bot setup and funding remain on PAIF.fun's existing web flows. The app never
+imports or stores a user's private key and never treats a wallet address alone
+as backend authentication.
 
 The icon and splash use the existing PAIF mascot. Manrope, Space Grotesk, DM Mono,
 and both color palettes match the website.
@@ -81,8 +85,20 @@ device if required by the submission). Record device, OS, wallet and app version
   the demo message, verify its exact displayed content and local signature.
 - Switch wallet account and ensure signing fails until reconnecting. Disconnect
   clears local metadata and attempts wallet-side revocation; a failure is shown.
-- Confirm no private keys/seeds are requested or stored. The demo proof must not
-  unlock backend privileges or paid entitlements.
+- With a test wallet, request a Pump.fun quote and a graduated-token Jupiter
+  quote. Check the displayed input, minimum receive, and slippage; cancel in the
+  wallet and confirm nothing was sent. Approve a small test trade, verify its
+  signature on Solana Explorer, and confirm an unknown confirmation state does
+  not encourage an automatic resubmission.
+- Unlock Swing Bots and automated strategies separately. Confirm each read
+  session is signed by the connected owner, switching wallets clears access,
+  and each start/pause/stop action requires a new signature.
+- Verify that a Swing Bot pause leaves positions open and pauses exits; its
+  Stop action is clearly confirmed as sell-and-return-funds. For strategies,
+  verify Cancel/withdraw is distinct from Sell everything, and that funds can
+  only return to the owner fixed when the strategy was created.
+- Confirm no private keys/seeds are requested or stored. A message signature
+  must not be treated as a transaction approval or unlock paid entitlements.
 - Install the standalone APK without Metro, verify startup and data access, and
   check the icon, splash, back navigation, safe areas and text at narrow widths.
 
@@ -95,15 +111,19 @@ certification cannot be claimed from TypeScript checks or a browser preview.
 
 Verified on 2026-10-05:
 
-- TypeScript compilation and seven paper-ledger/message-verification tests passed.
+- TypeScript compilation and 11 paper-ledger, trade-amount, wallet-proof, and
+  owner-signature-protocol tests passed.
 - Expo package alignment and all 21 Expo Doctor checks passed.
 - Android prebuild generated the native project, and autolinking recognized the
   Mobile Wallet Adapter native module.
-- Android JavaScript/Hermes export completed successfully. This is a bundle,
-  not an installable APK or proof of native Gradle compilation.
+- The Android JavaScript/Hermes export completed successfully with the live
+  trade and bot screens included. This is a bundle, not an installable APK or
+  proof of native Gradle compilation. The APK prerequisite check confirmed
+  Java, adb, and `ANDROID_HOME` are unavailable in this workspace.
 - At a 402×874 browser viewport, discovery loaded real data; research reported
   partial data, low confidence, and unavailable sanctions coverage honestly.
 - A 100-chip buy, saved open position, full fresh-price sale, settled return and
   trade history all survived browser reloads. An over-budget amount was disabled.
 - Browser wallet controls stayed disabled with the custom-Android-build notice;
-  no native wallet approval/signing was claimed. No horizontal overflow was found.
+  no native wallet approval/signing or live trade was claimed. No horizontal
+  overflow was found.

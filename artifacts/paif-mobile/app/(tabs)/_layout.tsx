@@ -20,6 +20,7 @@ export default function TabLayout() {
     }}>
       <Tabs.Screen name="index" options={{ title: 'Discover', tabBarIcon: icon('compass'), tabBarButtonTestID: 'tab-discover' }} />
       <Tabs.Screen name="paper" options={{ title: 'Paper', tabBarIcon: icon('layers'), tabBarButtonTestID: 'tab-paper' }} />
+      <Tabs.Screen name="bots" options={{ title: 'Bots', tabBarIcon: icon('activity'), tabBarButtonTestID: 'tab-bots' }} />
       <Tabs.Screen name="wallet" options={{ title: 'Wallet', tabBarIcon: icon('credit-card'), tabBarButtonTestID: 'tab-wallet' }} />
     </Tabs>
   );

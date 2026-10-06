@@ -5,6 +5,8 @@ import { Buffer } from 'buffer';
 import bs58 from 'bs58';
 import { z } from 'zod';
 import { verifyWalletPayload } from './wallet-proof';
+import { VersionedTransaction } from '@solana/web3.js';
+import type { Web3MobileWallet } from '@solana-mobile/mobile-wallet-adapter-protocol-web3js';
 import type { WalletAccount, WalletProof } from './wallet-adapter';
 
 export type { WalletAccount, WalletProof } from './wallet-adapter';
@@ -120,3 +122,72 @@ export async function signWalletDemo(expectedAddress: string): Promise<WalletPro
     throw friendly(cause);
   }
 }
+
+async function withAuthorizedWallet<T>(
+  expectedAddress: string,
+  action: (wallet: Web3MobileWallet) => Promise<T>,
+): Promise<T> {
+  const { transact } = await sdk();
+  const prior = await metadata();
+  if (!prior || prior.address !== expectedAddress) {
+    throw new Error('The wallet authorization changed. Reconnect before continuing.');
+  }
+  return transact(async (wallet) => {
+    const authorization = await wallet.authorize({
+      chain: 'solana:mainnet', identity: identity(), auth_token: prior.authToken,
+    });
+    const account = authorization.accounts.find((item) => item.address === prior.base64Address);
+    if (!account) throw new Error('The authorized wallet account changed. Reconnect before continuing.');
+    await SecureStore.setItemAsync(KEY, JSON.stringify({ ...prior, authToken: authorization.auth_token }));
+    return action(wallet);
+  });
+}
+
+export async function signWalletMessage(expectedAddress: string, message: string): Promise<string> {
+  try {
+    if (!message || message.length > 1024) throw new Error('The signed request is empty or too long.');
+    const bytes = new Uint8Array(Buffer.from(message, 'utf8'));
+    return await withAuthorizedWallet(expectedAddress, async (wallet) => {
+      const prior = await metadata();
+      if (!prior || prior.address !== expectedAddress) throw new Error('Reconnect the wallet before signing.');
+      const payloads = await wallet.signMessages({ addresses: [prior.base64Address], payloads: [bytes] });
+      if (payloads.length !== 1) throw new Error('The wallet returned an unexpected number of signatures.');
+      const signatureBase64 = verifyWalletPayload(
+        payloads[0],
+        bytes,
+        new Uint8Array(Buffer.from(prior.base64Address, 'base64')),
+      );
+      return bs58.encode(Buffer.from(signatureBase64, 'base64'));
+    });
+  } catch (cause) {
+    if ((cause as { code?: number }).code === -1) await SecureStore.deleteItemAsync(KEY);
+    throw friendly(cause);
+  }
+}
+
+export async function sendWalletTransaction(
+  expectedAddress: string,
+  serializedTransaction: string,
+): Promise<string> {
+  try {
+    const transaction = VersionedTransaction.deserialize(Buffer.from(serializedTransaction, 'base64'));
+    const payer = transaction.message.staticAccountKeys[0]?.toBase58();
+    if (payer !== expectedAddress) {
+      throw new Error('The transaction fee payer does not match the connected wallet. Nothing was sent.');
+    }
+    return await withAuthorizedWallet(expectedAddress, async (wallet) => {
+      const signatures = await wallet.signAndSendTransactions({
+        transactions: [transaction],
+        commitment: 'confirmed',
+      });
+      if (signatures.length !== 1 || typeof signatures[0] !== 'string' || bs58.decode(signatures[0]).length !== 64) {
+        throw new Error('The wallet returned an unexpected transaction signature.');
+      }
+      return signatures[0];
+    });
+  } catch (cause) {
+    if ((cause as { code?: number }).code === -1) await SecureStore.deleteItemAsync(KEY);
+    throw friendly(cause);
+  }
+}
+

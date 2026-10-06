@@ -1,11 +1,14 @@
 import React, { createContext, useContext, useRef, useState } from 'react';
 import {
-  connectWallet, disconnectWallet, signWalletDemo, supported, type WalletProof,
+  connectWallet, disconnectWallet, sendWalletTransaction, signWalletDemo,
+  signWalletMessage, supported, type WalletProof,
 } from '@/lib/wallet-adapter';
 
 interface WalletContextValue {
   address: string | null; busy: boolean; error: string | null; proof: WalletProof | null;
   supported: boolean; connect(): Promise<void>; disconnect(): Promise<void>; signDemo(): Promise<void>;
+  signMessage(message: string): Promise<string>;
+  sendTransaction(serializedTransaction: string): Promise<string>;
   clearError(): void;
 }
 const WalletContext = createContext<WalletContextValue | null>(null);
@@ -17,14 +20,25 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
   const [proof, setProof] = useState<WalletProof | null>(null);
   const lock = useRef(false);
 
-  async function run(action: () => Promise<void>) {
-    if (lock.current) return;
+  async function runWithResult<T>(action: () => Promise<T>): Promise<T> {
+    if (lock.current) throw new Error('Another wallet request is already open. Finish it before starting another.');
     lock.current = true;
     setBusy(true);
     setError(null);
-    try { await action(); } catch (cause) {
-      setError(cause instanceof Error ? cause.message : 'Wallet request failed. Nothing was signed or sent.');
-    } finally { lock.current = false; setBusy(false); }
+    try {
+      return await action();
+    } catch (cause) {
+      const message = cause instanceof Error ? cause.message : 'Wallet request failed. Nothing was signed or sent.';
+      setError(message);
+      throw new Error(message);
+    } finally {
+      lock.current = false;
+      setBusy(false);
+    }
+  }
+
+  async function run(action: () => Promise<void>): Promise<void> {
+    try { await runWithResult(action); } catch { /* Errors are exposed through context state. */ }
   }
 
   return (
@@ -46,6 +60,14 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
         if (result.address !== address) throw new Error('The wallet account changed. Reconnect before signing.');
         setProof(result);
       }),
+      signMessage: (message) => {
+        if (!address) return Promise.reject(new Error('Connect your wallet before signing.'));
+        return runWithResult(() => signWalletMessage(address, message));
+      },
+      sendTransaction: (serializedTransaction) => {
+        if (!address) return Promise.reject(new Error('Connect your wallet before trading.'));
+        return runWithResult(() => sendWalletTransaction(address, serializedTransaction));
+      },
     }}>
       {children}
     </WalletContext.Provider>
