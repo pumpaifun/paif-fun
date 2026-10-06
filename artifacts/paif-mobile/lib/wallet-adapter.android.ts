@@ -45,12 +45,23 @@ async function metadata() {
   }
 }
 
-function friendly(cause: unknown): Error {
+function friendly(cause: unknown, transactionMayHaveBeenSent = false): Error {
   const error = cause as { code?: string | number; message?: string };
   if (error.code === 'ERROR_WALLET_NOT_FOUND') return new Error('No compatible Android wallet was found. Install a Mobile Wallet Adapter wallet and retry.');
-  if (error.code === 'ERROR_ASSOCIATION_CANCELLED' || error.code === -3) return new Error('The wallet request was cancelled or the signature was declined. Nothing was sent.');
+  if (error.code === 'ERROR_ASSOCIATION_CANCELLED' || error.code === -3) {
+    return new Error(transactionMayHaveBeenSent
+      ? 'The wallet request was cancelled. Check wallet activity before retrying.'
+      : 'The wallet request was cancelled or the signature was declined. Nothing was sent.');
+  }
   if (error.code === -1) return new Error('Wallet authorization was declined or expired. Connect again to approve a new session.');
-  if (error.code === 'ERROR_SESSION_TIMEOUT') return new Error('The wallet did not respond in time. Open the wallet, then retry.');
+  if (error.code === 'ERROR_SESSION_TIMEOUT') {
+    return new Error(transactionMayHaveBeenSent
+      ? 'The wallet did not respond in time. Check wallet activity before retrying.'
+      : 'The wallet did not respond in time. Open the wallet, then retry.');
+  }
+  if (transactionMayHaveBeenSent) {
+    return new Error(`${error.message || 'The native wallet request failed.'} Check wallet activity before retrying.`);
+  }
   return new Error(error.message || 'The native wallet request failed. Nothing was sent.');
 }
 
@@ -169,6 +180,7 @@ export async function sendWalletTransaction(
   expectedAddress: string,
   serializedTransaction: string,
 ): Promise<string> {
+  let transactionMayHaveBeenSent = false;
   try {
     const transaction = VersionedTransaction.deserialize(Buffer.from(serializedTransaction, 'base64'));
     const payer = transaction.message.staticAccountKeys[0]?.toBase58();
@@ -176,6 +188,7 @@ export async function sendWalletTransaction(
       throw new Error('The transaction fee payer does not match the connected wallet. Nothing was sent.');
     }
     return await withAuthorizedWallet(expectedAddress, async (wallet) => {
+      transactionMayHaveBeenSent = true;
       const signatures = await wallet.signAndSendTransactions({
         transactions: [transaction],
         commitment: 'confirmed',
@@ -187,7 +200,7 @@ export async function sendWalletTransaction(
     });
   } catch (cause) {
     if ((cause as { code?: number }).code === -1) await SecureStore.deleteItemAsync(KEY);
-    throw friendly(cause);
+    throw friendly(cause, transactionMayHaveBeenSent);
   }
 }
 
