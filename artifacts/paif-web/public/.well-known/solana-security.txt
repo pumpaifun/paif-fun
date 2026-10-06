@@ -1,0 +1,32 @@
+Project: PAIF.fun
+Contact: mailto:security@paif.fun
+Contact: https://paif.fun
+Policy: https://paif.fun/whitepaper
+Preferred-Languages: en
+Source: https://paif.fun
+
+PAIF.fun is a Solana DeFi platform offering:
+  - Pump.fun token scanning, wallet analysis, and on-chain feed
+  - Community-driven prediction signals
+  - Swap aggregation routed through Jupiter
+  - Pump.fun bump bot (visibility-only, no token custody)
+  - Pump.fun sniper bot (visibility-only, no token custody)
+
+Custody model:
+  - Private keys are NEVER transmitted to or stored on PAIF servers.
+  - All on-chain transactions are signed locally by the user's wallet
+    (Phantom, Solflare, etc.) or by a client-generated session keypair
+    that lives only in the user's browser (encrypted at rest in the
+    user's localStorage with a passphrase the user controls).
+  - PAIF takes ZERO on-chain protocol fees on swaps, bumps, or snipes
+    (PAIF_FEE_BPS=0, PAIF_CREATOR_BPS=0). Revenue comes exclusively
+    from off-chain credit-pack subscriptions paid in SOL.
+
+Transaction shape:
+  - Swaps and snipes use Jupiter / pump.fun program instructions only.
+  - Bump bot transactions are bare pump.fun buy/sell instructions
+    with no extra SystemProgram.transfer for platform fees.
+  - Session-wallet funding transactions are plain SOL transfers from
+    the user's main wallet to a client-generated session pubkey.
+
+Disclosure: please report security issues to security@paif.fun.

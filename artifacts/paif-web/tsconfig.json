@@ -1,0 +1,32 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "include": ["src/**/*", "../../lib/paif-shared/src/*.d.ts"],
+  "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
+  "compilerOptions": {
+    "noImplicitReturns": false,
+    "noFallthroughCasesInSwitch": false,
+    "noEmit": true,
+    "jsx": "preserve",
+    "lib": ["esnext", "dom", "dom.iterable"],
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+    "moduleResolution": "bundler",
+    "types": ["node", "vite/client"],
+    "paths": {
+      "react": ["./node_modules/@types/react/index.d.ts"],
+      "react/jsx-runtime": ["./node_modules/@types/react/jsx-runtime.d.ts"],
+      "react/jsx-dev-runtime": ["./node_modules/@types/react/jsx-dev-runtime.d.ts"],
+      "react-dom": ["./node_modules/@types/react-dom/index.d.ts"],
+      "@/*": ["./src/*"],
+      "@shared/*": ["../../lib/paif-shared/src/*"]
+    }
+  },
+  "references": [
+    {
+      "path": "../../lib/paif-shared"
+    },
+    {
+      "path": "../../lib/api-client-react"
+    }
+  ]
+}

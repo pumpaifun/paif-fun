@@ -1,0 +1,23 @@
+{
+  "metadata": [
+    {
+      "symbol": "AAPLon",
+      "ticker": "AAPL",
+      "displayName": "Apple (Ondo Tokenized)",
+      "tags": { "instrumentType": "Equity" },
+      "addresses": [
+        { "networkChainId": "ethereum-1", "address": "0x123" },
+        { "networkChainId": "solana-mainnet", "address": "So11111111111111111111111111111111111111112" }
+      ]
+    }
+  ],
+  "markets": [
+    {
+      "primaryMarket": { "symbol": "AAPLon", "price": "226.25", "priceChangePct24h": "1.75" },
+      "timestamp": 1788220800000
+    }
+  ],
+  "tickers": [
+    { "baseCurrency": "AAPLon", "lastPrice": "225.90", "targetVolume": "125000.50" }
+  ]
+}

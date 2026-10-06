@@ -1,0 +1,24 @@
+kind = "web"
+previewPath = "/"
+title = "PAIF.fun"
+description = "The existing PAIF.fun website, preserved with its original tools, wallet connections, community, and visual identity."
+version = "1.0.0"
+id = "artifacts/paif-web"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 20936
+
+[services.development]
+run = "pnpm --filter @workspace/paif-web run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/paif-web", "run", "build" ]
+run = [ "node", "artifacts/paif-web/server.mjs" ]
+
+
+[services.env]
+PORT = "20936"
+BASE_PATH = "/"

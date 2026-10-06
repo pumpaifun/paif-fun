@@ -1,0 +1,26 @@
+{
+  "name": "PAIF.fun",
+  "short_name": "PAIF",
+  "description": "Solana DeFi suite — pump.fun bump bot, sniper, swap, and on-chain wallet/whale tracking. Self-custody, no platform fees on-chain.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#10b981",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["finance", "productivity"],
+  "orientation": "portrait-primary"
+}

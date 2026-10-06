@@ -1,0 +1,19 @@
+{
+  "name": "bigint-buffer",
+  "version": "1.1.6",
+  "description": "Pure JavaScript compatibility build of bigint-buffer",
+  "main": "index.js",
+  "module": "index.mjs",
+  "browser": "index.mjs",
+  "exports": {
+    ".": {
+      "import": "./index.mjs",
+      "require": "./index.js"
+    }
+  },
+  "types": "index.d.ts",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=10"
+  }
+}

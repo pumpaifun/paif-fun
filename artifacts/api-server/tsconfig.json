@@ -1,0 +1,27 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "noImplicitReturns": false,
+    "noFallthroughCasesInSwitch": false,
+    "incremental": true,
+    "tsBuildInfoFile": ".tsbuildinfo",
+    "outDir": "dist",
+    "rootDir": "src",
+    "types": ["node"],
+    "paths": {
+      "@shared/*": ["../../lib/paif-shared/src/*"]
+    }
+  },
+  "include": ["src", "../../lib/paif-shared/src/*.d.ts"],
+  "references": [
+    {
+      "path": "../../lib/paif-shared"
+    },
+    {
+      "path": "../../lib/db"
+    },
+    {
+      "path": "../../lib/api-zod"
+    }
+  ]
+}

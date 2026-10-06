@@ -1,0 +1,28 @@
+[
+  {
+    "nodes": [
+      {
+        "id": "apple",
+        "name": "Apple xStock",
+        "symbol": "AAPLx",
+        "underlying": { "symbol": "AAPL", "type": "Equity" },
+        "deployments": [{ "network": "Solana", "address": "So11111111111111111111111111111111111111112" }],
+        "trading": { "openNow": true, "isTradingHalted": false }
+      }
+    ],
+    "page": { "hasNextPage": true }
+  },
+  {
+    "nodes": [
+      {
+        "id": "tesla",
+        "name": "Tesla xStock",
+        "symbol": "TSLAx",
+        "underlying": { "symbol": "TSLA", "type": "Equity" },
+        "deployments": [{ "network": "Solana", "address": "11111111111111111111111111111111" }],
+        "trading": { "openNow": false, "isTradingHalted": false }
+      }
+    ],
+    "page": { "hasNextPage": false }
+  }
+]
