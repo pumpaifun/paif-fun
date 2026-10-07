@@ -81,14 +81,14 @@ function HomeExploreLinks() {
 
 export default function Home() {
   return (
-    <div className="min-h-[100dvh] bg-background">
+    <div className="home-page min-h-[100dvh] bg-background text-foreground">
       <Header />
       <div className="sticky top-14 z-[9998] shadow-sm" data-testid="home-sticky-trending">
         <TrendingTicker />
         <TrendingXStocksTicker />
       </div>
       <main className="overflow-hidden">
-        <section className="relative border-b border-border bg-[hsl(157_29%_10%)] sm:bg-transparent">
+        <section className="relative border-b border-border bg-background dark:bg-[hsl(157_29%_10%)] sm:bg-transparent">
           <div className="absolute inset-x-0 top-0 h-56 bg-[radial-gradient(ellipse_at_top,hsl(151_73%_43%/.18),transparent_70%)]" />
            <div className="relative z-10 mx-auto grid max-w-6xl min-w-0 gap-8 px-4 py-10 sm:gap-10 sm:px-6 sm:py-12 lg:grid-cols-[.95fr_1.05fr] lg:items-center lg:gap-12 lg:py-20">
              <div id="scanner" className="order-2 min-w-0 lg:order-2 lg:pl-2">

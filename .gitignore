@@ -11,6 +11,15 @@ out-tsc
 # dependencies
 node_modules
 
+# Local credentials and private signing material
+.env
+.env.*
+!.env.example
+*.jks
+*.keystore
+*.p12
+*.p8
+
 # IDEs and editors
 /.idea
 .project
@@ -47,3 +56,11 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# Generated Android download builds
+/downloads/*.apk
+
+# Generated native emulator diagnostics
+/screenshots/android-emulator-boot.png
+/screenshots/android-smoke.png
+/screenshots/android-smoke.log

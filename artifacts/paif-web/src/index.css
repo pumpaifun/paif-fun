@@ -166,6 +166,18 @@
   --destructive-border: hsl(from hsl(var(--destructive)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
 }
 
+.home-page {
+  --foreground: 220 18% 16%;
+  --card-foreground: 220 18% 16%;
+  --muted-foreground: 220 12% 34%;
+}
+
+.dark .home-page {
+  --foreground: 60 22% 94%;
+  --card-foreground: 60 22% 94%;
+  --muted-foreground: 151 12% 68%;
+}
+
 @layer base {
   * {
     @apply border-border;

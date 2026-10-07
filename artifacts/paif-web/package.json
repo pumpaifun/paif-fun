@@ -8,7 +8,7 @@
     "build": "vite build --config vite.config.ts",
     "serve": "node server.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "tsx src/lib/paper-exit.test.ts"
+    "test": "tsx src/lib/paper-exit.test.ts && tsx --test src/lib/wallet-storage.test.ts"
   },
   "dependencies": {
     "express": "^5.2.1"

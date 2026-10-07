@@ -8,8 +8,11 @@
     "build": "node scripts/build.js",
     "serve": "node server/serve.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "tsx --test lib/paper.test.ts lib/mobile-protocols.test.ts",
+    "test": "tsx --test lib/paper.test.ts lib/mobile-protocols.test.ts lib/swing-setup.test.ts",
     "android:check": "node scripts/android-prerequisites.cjs",
+    "android:apk": "node scripts/android-apk.cjs",
+    "android:smoke": "node scripts/android-smoke.cjs",
+    "test:android-build": "node --test scripts/android-build.test.cjs",
     "android:prebuild": "expo prebuild --platform android",
     "android": "expo run:android"
   },

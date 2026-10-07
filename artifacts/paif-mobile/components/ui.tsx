@@ -48,8 +48,8 @@ export function Header({ title, subtitle, onBack, right }: { title?: string; sub
     <View style={{ paddingTop: top + 8, paddingHorizontal: 16, paddingBottom: 12, backgroundColor: c.background, borderBottomWidth: 1, borderBottomColor: c.border }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
         {onBack ? (
-          <Pressable testID="button-back" accessibilityLabel="Back" onPress={onBack} style={{ paddingVertical: 6, paddingRight: 6 }}>
-            <Text style={{ fontFamily: F.heavy, color: c.primary, fontSize: 15 }}>Back</Text>
+          <Pressable testID="button-back" accessibilityRole="button" accessibilityLabel="Go to previous screen" onPress={onBack} style={{ width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={{ fontFamily: F.heavy, color: c.primary, fontSize: 32 }}>‹</Text>
           </Pressable>
         ) : (
           <Image source={require('@/assets/images/paif-favicon.png')} style={{ width: 30, height: 30, borderRadius: 7 }} />

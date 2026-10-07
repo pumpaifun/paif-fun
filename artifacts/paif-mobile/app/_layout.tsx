@@ -23,6 +23,7 @@ function RootLayoutNav() {
     <Stack screenOptions={{ headerBackTitle: 'Back' }}>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="token/[mint]" options={{ headerShown: false }} />
+      <Stack.Screen name="bot-setup" options={{ headerShown: false }} />
     </Stack>
   );
 }

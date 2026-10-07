@@ -11,6 +11,141 @@ tags:
   - name: health
     description: Health operations
 paths:
+  /swing-bot/create:
+    post:
+      operationId: createMobileSwingBot
+      tags: [mobileBots]
+      summary: Create an owner-signed Swing Bot
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MobileSwingCreate"
+      responses:
+        "200":
+          description: Created; paper bots begin running, live bots await funding
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MobileSwingCreated"
+        "402":
+          description: Active Access Pass or trial required for wallet-owned paper bots
+  /swing-bot/{id}/settings:
+    post:
+      operationId: updateMobileSwingSettings
+      tags: [mobileBots]
+      summary: Change owner-signed Swing Bot settings
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MobileSwingSettings"
+      responses:
+        "200":
+          description: Saved settings
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [strategy]
+                properties:
+                  strategy:
+                    $ref: "#/components/schemas/MobileSwingSummary"
+  /swing-bot/{id}/signal/{signalId}/{action}:
+    post:
+      operationId: respondMobileSwingSignal
+      tags: [mobileBots]
+      summary: Owner-signed approval or dismissal of a pending buy suggestion
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string } }
+        - { name: signalId, in: path, required: true, schema: { type: string } }
+        - { name: action, in: path, required: true, schema: { type: string, enum: [approve, dismiss] } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MobileBotSignature"
+      responses:
+        "200":
+          description: Suggestion handled; approval may execute a trade at the current price
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  /paif-alpha/oversight:
+    get:
+      operationId: getAlphaOversightAuthority
+      summary: Read the wallet authorized to request advisory briefs
+      responses:
+        "200":
+          description: Authority (independent of Claw Pump availability)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AlphaOversightAuthority"
+  /paif-alpha/briefs:
+    post:
+      operationId: requestAlphaBrief
+      summary: Request a server-generated advisory-only oversight brief
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AlphaBriefAuthorization"
+      responses:
+        "201":
+          description: Durable advisory brief
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AlphaOversightBrief"
+        "400":
+          description: Invalid input
+        "401":
+          description: Invalid or expired owner signature
+        "409":
+          description: Authorization already used
+        "429":
+          description: Brief request limit reached
+        "503":
+          description: Durable storage unavailable
+  /paif-alpha/briefs/history:
+    post:
+      operationId: getAlphaBriefHistory
+      summary: Read the latest 20 briefs with a separate owner signature
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AlphaBriefAuthorization"
+      responses:
+        "200":
+          description: Newest first, bounded to 20 briefs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AlphaOversightBrief"
+        "400":
+          description: Invalid input
+        "401":
+          description: Invalid or expired owner signature
+        "409":
+          description: Authorization already used
+        "503":
+          description: Durable storage unavailable
   /healthz:
     get:
       operationId: healthCheck
@@ -26,6 +161,121 @@ paths:
                 $ref: "#/components/schemas/HealthStatus"
 components:
   schemas:
+    MobileBotSignature:
+      type: object
+      required: [ownerWallet, nonce, signature]
+      properties:
+        ownerWallet: { type: string }
+        nonce: { type: number }
+        signature: { type: string }
+    MobileSwingSummary:
+      type: object
+      required: [id, name, mode, status]
+      additionalProperties: true
+      properties:
+        id: { type: string }
+        name: { type: string }
+        mode: { type: string, enum: [paper, live] }
+        status: { type: string }
+        workerWallet: { type: string }
+        targetMint: { type: [string, "null"] }
+        maxPositions: { type: integer }
+        minLiquidityUsd: { type: number }
+        minPoolAgeHours: { type: [integer, "null"] }
+        requireApproval: { type: boolean }
+        takeProfitPct: { type: [number, "null"] }
+        profitSkimPct: { type: integer }
+        lossStopCount: { type: integer }
+    MobileSwingCreated:
+      type: object
+      required: [strategy, fundingAddress, recommendedFundingSol]
+      properties:
+        strategy:
+          $ref: "#/components/schemas/MobileSwingSummary"
+        fundingAddress: { type: string }
+        recommendedFundingSol: { type: number }
+    MobileSwingSettings:
+      allOf:
+        - $ref: "#/components/schemas/MobileBotSignature"
+        - type: object
+          properties:
+            name: { type: string, minLength: 1, maxLength: 40 }
+            maxPositions: { type: integer, minimum: 1, maximum: 10 }
+            minLiquidityUsd: { type: number, minimum: 5000, maximum: 1000000 }
+            minPoolAgeHours: { type: integer, minimum: 0, maximum: 720 }
+            requireApproval: { type: boolean }
+            takeProfitPct: { type: [number, "null"], minimum: 3, maximum: 500 }
+            profitSkimPct: { type: integer, minimum: 0, maximum: 100 }
+            lossStopCount: { type: integer, minimum: 1, maximum: 20 }
+            stopRoomPct: { type: [integer, "null"], minimum: 2, maximum: 50 }
+            winnerKeepPct: { type: [integer, "null"], minimum: 40, maximum: 90 }
+            neverSellAtLoss: { type: boolean }
+            redEndBehavior: { type: string, enum: [sell, send_tokens] }
+            allowStacking: { type: boolean }
+            hotStreakFullSize: { type: boolean }
+    MobileSwingCreate:
+      allOf:
+        - $ref: "#/components/schemas/MobileSwingSettings"
+        - type: object
+          required: [mode, budgetSol, windowHours]
+          properties:
+            mode: { type: string, enum: [paper, live] }
+            budgetSol: { type: number, minimum: 0.01, maximum: 10 }
+            windowHours: { type: integer, minimum: 12, maximum: 720 }
+            universe: { type: string, enum: [crypto] }
+            style: { type: string, enum: [quick, ride] }
+            unlimitedWindow: { type: boolean }
+            targetMint: { type: string }
+            manualBuy: { type: boolean }
+            reentry: { type: boolean }
+            takeProfitPct: { type: number, minimum: 3, maximum: 500 }
+    AlphaOversightAuthority:
+      type: object
+      required: [ownerWallet, advisoryOnly, engine]
+      properties:
+        ownerWallet: { type: string }
+        advisoryOnly: { type: boolean, const: true }
+        engine: { type: string, enum: [rules-based-fallback] }
+    AlphaBriefAuthorization:
+      type: object
+      additionalProperties: false
+      required: [nonce, signature]
+      properties:
+        nonce: { type: integer, description: "Unix milliseconds. Sign paif-alpha-oversight|v1|request or history|ownerWallet|nonce. Valid for five minutes." }
+        signature: { type: string, minLength: 80, maxLength: 100 }
+    AlphaOversightEvidence:
+      type: object
+      required: [area, source, status, observedAt, facts, limitations]
+      properties:
+        area: { type: string, enum: [market, paper, payments, release] }
+        source: { type: string }
+        status: { type: string, enum: [observed, degraded, unknown] }
+        observedAt: { type: string, format: date-time }
+        facts:
+          type: array
+          maxItems: 6
+          items: { type: string, maxLength: 240 }
+        limitations:
+          type: array
+          maxItems: 4
+          items: { type: string, maxLength: 240 }
+    AlphaOversightBrief:
+      type: object
+      required: [id, generatedAt, advisoryOnly, engine, confidence, riskLevel, recommendation, evidence]
+      properties:
+        id: { type: string }
+        generatedAt: { type: string, format: date-time }
+        advisoryOnly: { type: boolean, const: true }
+        engine: { type: string, enum: [rules-based-fallback] }
+        confidence: { type: integer, minimum: 0, maximum: 100 }
+        riskLevel: { type: string, enum: [low, medium, high] }
+        recommendation: { type: string, maxLength: 600 }
+        evidence:
+          type: array
+          minItems: 4
+          maxItems: 4
+          items:
+            $ref: "#/components/schemas/AlphaOversightEvidence"
     HealthStatus:
       type: object
       properties:
@@ -33,4 +283,3 @@ components:
           type: string
       required:
         - status
-

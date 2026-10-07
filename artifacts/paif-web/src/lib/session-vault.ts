@@ -80,13 +80,13 @@ function fromB64(b64: string): Uint8Array {
 async function deriveKeyFromBytes(rawSecret: Uint8Array, salt: Uint8Array): Promise<CryptoKey> {
   const baseKey = await crypto.subtle.importKey(
     "raw",
-    rawSecret,
+    new Uint8Array(rawSecret),
     { name: "PBKDF2" },
     false,
     ["deriveKey"],
   );
   return crypto.subtle.deriveKey(
-    { name: "PBKDF2", salt, iterations: PBKDF2_ITERS, hash: "SHA-256" },
+    { name: "PBKDF2", salt: new Uint8Array(salt), iterations: PBKDF2_ITERS, hash: "SHA-256" },
     baseKey,
     { name: "AES-GCM", length: 256 },
     false,
@@ -152,7 +152,9 @@ async function encryptSecret(
   iv: Uint8Array,
 ): Promise<Uint8Array> {
   return new Uint8Array(
-    await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, secretKey),
+    await crypto.subtle.encrypt(
+      { name: "AES-GCM", iv: new Uint8Array(iv) }, key, new Uint8Array(secretKey),
+    ),
   );
 }
 
@@ -224,7 +226,9 @@ async function decryptSecret(
   const ct = fromB64(payload.ct);
   try {
     const pt = new Uint8Array(
-      await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, ct),
+      await crypto.subtle.decrypt(
+        { name: "AES-GCM", iv: new Uint8Array(iv) }, key, new Uint8Array(ct),
+      ),
     );
     if (pt.length !== 64) throw new Error("Decrypted key has wrong length");
     return pt;

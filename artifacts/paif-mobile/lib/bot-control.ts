@@ -7,9 +7,9 @@ export type BotAction = 'start' | 'pause' | 'stop' | 'cancel' | 'sell-now';
 
 const strategySchema = z.object({
   id: z.string().min(1),
-  name: z.string().optional().default('My bot'),
-  mode: z.string().optional().default('paper'),
-  status: z.string().optional().default('unknown'),
+  name: z.string().min(1),
+  mode: z.string().min(1),
+  status: z.string().min(1),
   style: z.string().optional(),
   budgetSol: z.number().optional(),
   budgetLamports: z.string().optional(),
@@ -80,6 +80,10 @@ export async function listOwnerBots(
   });
   const parsed = z.object({ strategies: z.array(strategySchema) }).safeParse(result);
   if (!parsed.success) throw new Error('The bot list response is incomplete or invalid.');
+  const modes = kind === 'swing' ? ['paper', 'live'] : ['dca', 'trade', 'volume'];
+  if (parsed.data.strategies.some((s) => !modes.includes(s.mode))) {
+    throw new Error('The bot service did not report a recognized trading mode. No money mode was assumed.');
+  }
   return parsed.data.strategies;
 }
 

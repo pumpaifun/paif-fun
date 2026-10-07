@@ -42,9 +42,9 @@ export default function WalletScreen() {
         </Card>
 
         <Card style={{ gap: 6 }}>
-          <Eyebrow>Limits of this build</Eyebrow>
-          <Body>Android only, custom development build. Requires an installed Mobile Wallet Adapter wallet.</Body>
-          <Body>No trading, swaps, or bot controls. Paper practice is separate and uses simulated chips.</Body>
+          <Eyebrow>Wallet safety</Eyebrow>
+          <Body>Requires the custom Android APK and an installed Mobile Wallet Adapter wallet. Your wallet keeps your secret keys.</Body>
+          <Body>Real trades and bot actions require your explicit approval and wallet signature. Paper practice uses simulated funds and is separate from real SOL.</Body>
         </Card>
       </ScrollView>
     </View>

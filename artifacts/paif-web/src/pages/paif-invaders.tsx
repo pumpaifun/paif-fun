@@ -329,7 +329,7 @@ function TokenColumn({
           onClick={onFavorite}
           aria-label={favorite ? `Remove ${token.symbol} from favorites` : `Add ${token.symbol} to favorites`}
           aria-pressed={favorite}
-          className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border transition ${
+          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full border transition sm:h-7 sm:w-7 ${
             favorite
               ? "border-[#ffd15b]/70 bg-[#ffd15b]/15 text-[#ffd15b]"
               : "border-[#315c4a] bg-[#0b1712] text-[#6f8e80] hover:border-[#ffd15b]/60 hover:text-[#ffd15b]"
@@ -366,17 +366,17 @@ function TokenColumn({
           className="mt-2 space-y-1 rounded-xl border border-[#50d890]/30 bg-[#07130e]/80 px-2 py-2 font-mono"
           aria-label={`${token.symbol} Paper chips`}
         >
-          <div className="flex items-center justify-between gap-1 text-[9px]">
+          <div className="flex items-center justify-between gap-1 text-[10px] sm:text-[9px]">
             <span className="text-[#b8cec4]">You put in</span>
             <strong className="truncate text-right text-[#f8f3df]">{paperPosition.chipsInvested.toFixed(1)} chips</strong>
           </div>
-          <div className="flex items-center justify-between gap-1 text-[9px]">
+          <div className="flex items-center justify-between gap-1 text-[10px] sm:text-[9px]">
             <span className="text-[#b8cec4]">Worth now</span>
             <strong className="truncate text-right text-[#f8f3df]">
               {hasCurrentPrice ? `${markToMarket.currentValue.toFixed(1)} chips` : "Price updating"}
             </strong>
           </div>
-          <div className="flex items-center justify-between gap-1 border-t border-[#28483b] pt-1 text-[9px]">
+          <div className="flex items-center justify-between gap-1 border-t border-[#28483b] pt-1 text-[10px] sm:text-[9px]">
             <span className="text-[#b8cec4]">
               {!hasCurrentPrice
                 ? "Change"
@@ -401,7 +401,7 @@ function TokenColumn({
         </div>
       )}
 
-      <div className="relative mt-3 h-[320px] overflow-hidden rounded-[16px] border border-[#28483b] bg-[#09120f]">
+      <div data-testid="lane-meter" className="relative mt-3 h-[160px] overflow-hidden rounded-[16px] border border-[#28483b] bg-[#09120f] sm:h-[320px]">
         <div className="absolute inset-x-0 top-[68%] border-t-2 border-dashed border-[#d4b566]/65" />
         <span className="absolute left-2 top-[calc(68%-18px)] font-mono text-[9px] uppercase tracking-[0.1em] text-[#a49382]">
           neutral
@@ -411,15 +411,15 @@ function TokenColumn({
             read.positive ? "bottom-[32%] rounded-t-xl" : "top-[68%] rounded-b-xl"
           }`}
           style={{
-            height: read.positive ? positiveHeight : negativeHeight,
+            height: `${((read.positive ? positiveHeight : negativeHeight) / 320) * 100}%`,
             background: candleColor,
             boxShadow: selected ? `0 0 24px ${candleColor}66` : undefined,
           }}
         >
-          <span className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-2">
+          <span className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1 sm:gap-2">
             <span className="flex gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#17120f]" />
-              <span className="h-1.5 w-1.5 rounded-full bg-[#17120f]" />
+              <span className="h-1 w-1 rounded-full bg-[#17120f] sm:h-1.5 sm:w-1.5" />
+              <span className="h-1 w-1 rounded-full bg-[#17120f] sm:h-1.5 sm:w-1.5" />
             </span>
             <span className={`h-1 w-4 rounded-full ${read.positive ? "bg-[#17120f]" : "bg-[#711f1b]"}`} />
           </span>

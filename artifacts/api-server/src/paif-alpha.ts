@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { z } from "zod";
 import { storage } from "./storage";
 import { getTreasuryAddress, SOLANA_ADDRESS_REGEX } from "./credits";
+import { registerAlphaOversightRoutes } from "./paif-alpha-oversight";
 import {
   addStatelessModelReview,
   alphaLanePickInputSchema,
@@ -136,6 +137,7 @@ async function getAlphaStatus() {
 }
 
 export function registerPaifAlphaRoutes(app: Express) {
+  registerAlphaOversightRoutes(app);
   const consumeReviewLimit = (req: any, res: any) => {
     const now = Date.now();
     if (now - globalReviewLimit.windowAt >= 60_000) globalReviewLimit = { windowAt: now, count: 0 };

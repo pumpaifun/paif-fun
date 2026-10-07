@@ -93,13 +93,13 @@ function fromB64(b64: string): Uint8Array {
 async function deriveKeyFromBytes(rawSecret: Uint8Array, salt: Uint8Array): Promise<CryptoKey> {
   const baseKey = await crypto.subtle.importKey(
     "raw",
-    rawSecret,
+    new Uint8Array(rawSecret),
     { name: "PBKDF2" },
     false,
     ["deriveKey"],
   );
   return crypto.subtle.deriveKey(
-    { name: "PBKDF2", salt, iterations: PBKDF2_ITERS, hash: "SHA-256" },
+    { name: "PBKDF2", salt: new Uint8Array(salt), iterations: PBKDF2_ITERS, hash: "SHA-256" },
     baseKey,
     { name: "AES-GCM", length: 256 },
     false,
@@ -190,7 +190,9 @@ async function encryptBundle(
 ): Promise<Uint8Array> {
   const blob = new Uint8Array(keypairs.length * SECRET_LEN);
   for (let i = 0; i < keypairs.length; i++) blob.set(keypairs[i].secretKey, i * SECRET_LEN);
-  return new Uint8Array(await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, blob));
+  return new Uint8Array(await crypto.subtle.encrypt(
+    { name: "AES-GCM", iv: new Uint8Array(iv) }, key, blob,
+  ));
 }
 
 function checkCount(count: number, maxCount: number) {
@@ -258,7 +260,9 @@ async function decryptBundle(
   let blob: Uint8Array;
   try {
     blob = new Uint8Array(
-      await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, ct),
+      await crypto.subtle.decrypt(
+        { name: "AES-GCM", iv: new Uint8Array(iv) }, key, new Uint8Array(ct),
+      ),
     );
   } catch {
     throw new Error(

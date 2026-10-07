@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { AlphaOversightBriefs } from "@/components/alpha-oversight-briefs";
 
 interface AlphaStatus {
   id: string;
@@ -166,6 +167,8 @@ export default function PaifAlphaPage() {
             </div>
           </Card>
         </section>
+
+        <AlphaOversightBriefs />
 
         <Card className="mt-8 p-6">
           <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">

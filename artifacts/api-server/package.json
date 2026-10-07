@@ -8,7 +8,7 @@
     "build": "node ./build.mjs",
     "start": "node --enable-source-maps ./dist/index.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "tsx src/paif-alpha-review.test.ts",
+    "test": "tsx src/paif-alpha-review.test.ts && tsx src/paif-alpha-oversight.test.ts",
     "test:community-market": "tsx src/run-community-market-tests.ts"
   },
   "dependencies": {
