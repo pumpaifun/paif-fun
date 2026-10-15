@@ -160,8 +160,9 @@ full bot create/edit behavior has been verified.
 
 ## Source ownership and licensing
 
-This repository is source-available for evaluation only. All rights reserved;
-see [LICENSE](./LICENSE.md). Each third-party dependency retains its own license.
+This repository is source-available. Judges and reviewers may clone, build, and
+run it for hackathon review; any other use needs written permission. All rights
+reserved; see [LICENSE](./LICENSE.md). Each third-party dependency retains its own license.
 
 The hackathon requires accessible source for judging; its terms do not require
 charging people to use the code. The organizer's portal describes public

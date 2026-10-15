@@ -8,16 +8,19 @@ This repository is public so hackathon judges, organizers, and reviewers can rea
 
 ## What you may do
 
-- View and read the code.
-- Clone and build it on your own machine only to judge, review, or evaluate PAIF.
+Hackathon judges, organizers, and reviewers may clone, copy, build, install, and run the code and the app (including the APK) as needed to judge, test, and verify PAIF for the hackathons it's entered in. Anyone may view and read the code.
 
 ## What you may not do without my written permission
 
-- Copy the code or any substantial part of it into another project.
-- Modify it, or fork it to use, run, or build on.
-- Redistribute, publish, sublicense, or sell it.
-- Deploy it, host it, or run it as a service for anyone.
-- Use it for any commercial purpose.
+Any use beyond hackathon judging and review needs my written permission. That includes:
+
+- Using the code, or any substantial part of it, in another project.
+- Modifying it or forking it for any purpose other than judging.
+- Deploying it to production, or hosting it or running it as a service for anyone.
+- Redistributing, publishing, sublicensing, or selling it.
+- Any commercial use.
+
+Licensing and API access terms are coming, and they're available on request now.
 
 ## No other rights
 

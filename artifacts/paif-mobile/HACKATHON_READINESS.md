@@ -61,9 +61,9 @@ See the root `README.md` for clone/build/install instructions and
   private repositories accessed via a team member's connected GitHub App.
   Confirm that access works before final submission. Private access does not
   override the organizer's non-confidentiality terms.
-- The root package currently says MIT, with no top-level LICENSE file. The
-  owner's intended source license must be resolved before uploading; this
-  preparation does not change it or add anti-scraping/evaluation-only terms.
+- The repository has a top-level `LICENSE.md` (source-available, all rights
+  reserved) that lets judges clone, build, and run it for hackathon review;
+  other use needs written permission.
 - Section 6.1: the project must have started no earlier than three months before
   the September 8 launch (June 8, 2026). Pre-existing projects also need significant
   new mobile development. Verify PAIF's eligibility instead of assuming it.

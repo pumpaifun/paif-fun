@@ -172,8 +172,9 @@ and approves it; neither the build nor this rehearsal authorizes spending funds.
 
 The user confirmed public visibility and approved updating the existing
 `pumpaifun/paif-fun` repository. No general reuse-license change was requested.
-The root package currently says MIT but has no top-level license text; licensing
-has been left unchanged. Hackathon participation is
+The repository has a top-level `LICENSE.md` (source-available, all rights
+reserved) that lets judges clone, build, and run it for hackathon review; other
+use needs written permission. Hackathon participation is
 free; it does not require charging people for code. Private repository access can
 limit public exposure, but the organizer explicitly treats submissions as
 non-confidential and receives the use license described in section 7.
