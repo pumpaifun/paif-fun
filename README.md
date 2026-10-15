@@ -1,5 +1,17 @@
 # PAIF.fun
 
+> **PAIF is public for review.** This repository is open to judges and reviewers in the ClawPump AnsemHack, the Colosseum Crypto World's Fair, and the Solana Mobile Clock In hackathons. It is not open source. All rights are reserved; see [LICENSE](./LICENSE.md).
+>
+> **Partner with PAIF.** Exchanges, platforms, and other partners can ask for:
+> - **API access** with your own API keys, priced by usage.
+> - **A license to integrate PAIF's engine** (sub-wallets, the AI Swing Bot, and the Arcade) into your own platform, including assets beyond Solana.
+>
+> PAIF is live and actively evolving. The core engine is stable, and we're continuing to refine the UI and roll out new features and add-ons. Partners who license now get access to those updates as they ship.
+>
+> Reach us at **paif@paif.fun**.
+>
+> *Signals, not guarantees. Crypto always carries risk.*
+
 PAIF.fun provides Solana token research, paper practice, wallet-approved trading,
 and owner-linked trading tools. This repository contains a **native Expo /
 React Native Android companion**, the existing website, and shared/backend source.
@@ -40,8 +52,8 @@ non-Linux native dependency binaries. Do not assume cross-platform installation
 from this test.
 
 1. Clone the submitted GitHub repository into a normal workspace/home directory
-   and open its root. Avoid `/tmp` on this Replit host: its separate quota blocked
-   native compilation despite `df` showing free space.
+   and open its root. Avoid building in `/tmp`: a separate `/tmp` quota can block
+   native compilation even when `df` shows free space.
    A private repository requires access for the judges.
 2. Install Node 24.13.0 (`nvm install && nvm use` if using nvm), then enable
    Corepack: `corepack enable`. The root package pins pnpm 10.26.1.
