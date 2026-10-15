@@ -80,7 +80,7 @@ from this test.
 
    The build runs shared/mobile type checks and mobile tests, generates the
    ignored Android project when missing, and builds a standalone **arm64-v8a**
-   APK. JavaScript is bundled; Metro and Replit are not needed to start this APK.
+   APK. JavaScript is bundled; Metro is not needed to start this APK.
    Internet access is needed for dependency downloads and live data.
    One Gradle worker is the default to reduce resource use.
    The build-only Java flags limit reported CPU count and disable performance-data
@@ -160,10 +160,8 @@ full bot create/edit behavior has been verified.
 
 ## Source ownership and licensing
 
-The root package currently labels its license `MIT`, but this repository has no
-top-level `LICENSE` file. This documentation does not add an evaluation license,
-change that label, or settle the owner's intended reuse terms. Resolve this before
-publishing source. Each third-party dependency retains its own license.
+This repository is source-available for evaluation only. All rights reserved;
+see [LICENSE](./LICENSE.md). Each third-party dependency retains its own license.
 
 The hackathon requires accessible source for judging; its terms do not require
 charging people to use the code. The organizer's portal describes public
